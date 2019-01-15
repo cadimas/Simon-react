@@ -1,25 +1,19 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+  handleColorClick = color =>{
+    console.log("color clicked was" , color);
+    
+  }
+ 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div className='container'>
+        <div onClick={() => this.handleColorClick("red")} className="color-button green"></div>
+        <div className="color-button red"></div>
+        <div className="color-button yellow"></div>
+        <div className="color-button blue"></div>
       </div>
     );
   }

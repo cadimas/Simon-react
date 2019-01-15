@@ -1,32 +1,57 @@
-.App {
-  text-align: center;
+.container{
+  display:grid;
+  grid-template-columns: auto auto;
+  grid-template-rows:1fr 1fr;
+  height: 300px;
+  width:300px;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
+.color-button{
+  border:2px solid black;
+  cursor: pointer;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.green{
+  background-color:#248f24;;
+  border-radius:100% 0px 0px 0px;
+  box-shadow: inset 15px 15px 60px #595959;
+  transition:0.3s all;
 }
 
-.App-link {
-  color: #61dafb;
+.red{
+  background-color:#c71f1f;
+  box-shadow: inset -20px 15px 60px #595959;
+  border-radius:0px 100% 0px 0px;
+  transition:0.3s all;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.yellow{
+  background-color: #c8da1cd1;
+  box-shadow: inset 15px -20px 60px #595959;
+  border-radius:0px 0px 0px 100%;
+  transition:0.3s all;
+}
+
+.blue{
+  background-color: #002db3;
+  box-shadow: inset -25px -25px 60px #595959;
+  border-radius:0px 0px 100% 0px;
+  transition:0.3s all;
+}
+
+.greenAnimation , .green:active{
+  background-color:#3ede32;
+ 
+}
+
+.redAnimation , .red:active{
+  background-color:#ff0000;
+}
+
+.yellowAnimation , .yellow:active{
+  background-color:#ffff00;
+}
+
+.blueAnimation , .blue:active{
+  background-color:#3e6cf5;
 }
