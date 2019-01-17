@@ -21,28 +21,12 @@ class App extends Component {
     };
   }
 
-  handleStrictClick = () => {
-    this.state.gameMode !== "strict"
-      ? this.setState({ gameMode: "strict" })
-      : this.setState({ gameMode: "normal" });
-  };
-
-  handleMistake = () => {
-    this.setState({ playerMistake: true, colorGuessIndex: 0 });
-    //if on strict mode reset list
-    if (this.state.gameMode === "strict") {
-      setTimeout(() => {
-        this.setState({ playerMistake: false });
-        this.handleStart();
-      }, 2000);
-    }
-    //else animate current list
-    else {
-      setTimeout(() => {
-        this.setState({ playerMistake: false });
-        this.animateList();
-      }, 2000);
-    }
+  handleStart = () => {
+    //resets list, then increments and animates list
+    this.setState({ colorList: [] }, () => {
+      this.incrementCycle();
+      this.animateList();
+    });
   };
 
   handleColorClick = color => {
@@ -66,12 +50,55 @@ class App extends Component {
     }
   };
 
-  handleStart = () => {
-    //resets list, then increments and animates list
-    this.setState({ colorList: [] }, () => {
-      this.incrementCycle();
-      this.animateList();
-    });
+  incrementCycle = () => {
+    let randColor = this.colors[Math.floor(Math.random() * 4)];
+    let newList = this.state.colorList;
+    newList.push(randColor);
+    this.setState({ colorList: newList });
+  };
+
+  handleMistake = () => {
+    this.setState({ playerMistake: true, colorGuessIndex: 0 });
+    //if on strict mode reset list
+    if (this.state.gameMode === "strict") {
+      setTimeout(() => {
+        this.setState({ playerMistake: false });
+        this.handleStart();
+      }, 2000);
+    }
+    //else animate current list
+    else {
+      setTimeout(() => {
+        this.setState({ playerMistake: false });
+        this.animateList();
+      }, 2000);
+    }
+  };
+
+  handleStrictClick = () => {
+    this.state.gameMode !== "strict"
+      ? this.setState({ gameMode: "strict" })
+      : this.setState({ gameMode: "normal" });
+  };
+
+  //animates current color list
+  animateList = () => {
+    //if game is not currently being animated, or in progress
+    if (this.state.gamePhase !== "animating") {
+      this.setState({ gameState: "animating" });
+      //Iterates through color list, adding setTimeOut in regard to incrementing i
+      for (let i = 0; i < this.state.colorList.length; i++) {
+        setTimeout(() => {
+          this.animateColor(this.state.colorList[i]);
+          this.playColorSound(this.state.animatedColor);
+        }, (i + 1) * 750);
+      }
+      //sets animated color to empty after all the colors were animated
+      setTimeout(
+        () => this.setState({ gameState: "waitingClick" }),
+        (this.state.colorList.length + 1) * 750
+      );
+    }
   };
 
   playColorSound = color => {
@@ -100,31 +127,6 @@ class App extends Component {
     setTimeout(() => {
       this.setState({ animatedColor: "" });
     }, 200);
-  };
-
-  animateList = () => {
-    if (this.state.gamePhase !== "animating") {
-      this.setState({ gameState: "animating" });
-      //Iterates through color list, adding setTimeOut in regard to incrementing i
-      for (let i = 0; i < this.state.colorList.length; i++) {
-        setTimeout(() => {
-          this.animateColor(this.state.colorList[i]);
-          this.playColorSound(this.state.animatedColor);
-        }, (i + 1) * 500);
-      }
-      //sets animated color to empty after all the colors were animated
-      setTimeout(
-        () => this.setState({ gameState: "waitingClick" }),
-        (this.state.colorList.length + 1) * 500
-      );
-    }
-  };
-
-  incrementCycle = () => {
-    let randColor = this.colors[Math.floor(Math.random() * 4)];
-    let newList = this.state.colorList;
-    newList.push(randColor);
-    this.setState({ colorList: newList });
   };
 
   render() {
