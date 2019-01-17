@@ -1,57 +1,232 @@
-.container{
-  display:grid;
-  grid-template-columns: auto auto;
-  grid-template-rows:1fr 1fr;
-  height: 300px;
-  width:300px;
+body {
+  margin: 0;
 }
 
-.color-button{
-  border:2px solid black;
+.container {
+  width: 600px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -300px;
+  transform: translateY(-50%); /*Center vertically*/
+}
+.color-grid {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: 1fr 1fr;
+  height: 600px;
+  width: 600px;
+}
+
+/*Inner circle Controls*/
+
+.title {
+  display: inline-block;
+  margin-top: 30px;
+  font-size: 40px;
+}
+
+#container-controls {
+  width: 250px;
+  height: 250px;
+  background-color: white;
+  z-index: 25;
+  position: absolute;
+  left: 175px;
+  top: 175px;
+  border: 3px solid black;
+  border-radius: 100%;
+  text-align: center;
+}
+
+.control-buttons {
+  position: relative;
+  top: 25px;
+}
+
+.start {
+  background-color: rgb(255, 0, 0);
+  border: 2px solid rgba(90, 58, 17, 0.344);
+}
+
+.strict {
+  background-color: rgb(197, 199, 78);
+  border: 2px solid rgba(90, 58, 17, 0.344);
+}
+
+.start,
+.strict {
+  display: inline-block;
+  position: relative;
+  margin: 0 20px 0 20px;
+  bottom: 10px;
+  right: 5px;
+  width: 17px;
+  height: 17px;
+  border-radius: 100%;
   cursor: pointer;
 }
 
-.green{
-  background-color:#248f24;;
-  border-radius:100% 0px 0px 0px;
+.strict-led {
+  display: inline-block;
+  position: absolute;
+  bottom: 20px;
+  right: 1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  cursor: pointer;
+  background-color: rgb(63, 50, 50);
+  border: 2px solid rgba(63, 50, 50);
+}
+
+.strict-active {
+  background-color: rgb(192, 46, 46);
+}
+
+.control-buttons span label {
+  position: relative;
+  right: 16px;
+  top: 20px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.counter {
+  position: relative;
+  display: inline-block;
+  margin-right: 20px;
+  font-size: 30px;
+  line-height: 40px;
+  width: 70px;
+  height: 40px;
+  color: red;
+  background-color: #330000;
+  border: solid 3px black;
+  border-radius: 10%;
+}
+
+/*End of inner circle controls*/
+
+/*Color buttons */
+.color-button {
+  border: 1.5px solid black;
+  cursor: pointer;
+}
+
+.green {
+  background-color: #248f24;
+  border-radius: 100% 0px 0px 0px;
   box-shadow: inset 15px 15px 60px #595959;
-  transition:0.3s all;
+  transition: 0.3s all;
 }
 
-.red{
-  background-color:#c71f1f;
+.red {
+  background-color: #c71f1f;
   box-shadow: inset -20px 15px 60px #595959;
-  border-radius:0px 100% 0px 0px;
-  transition:0.3s all;
+  border-radius: 0px 100% 0px 0px;
+  transition: 0.3s all;
 }
 
-.yellow{
+.yellow {
   background-color: #c8da1cd1;
   box-shadow: inset 15px -20px 60px #595959;
-  border-radius:0px 0px 0px 100%;
-  transition:0.3s all;
+  border-radius: 0px 0px 0px 100%;
+  transition: 0.3s all;
 }
 
-.blue{
+.blue {
   background-color: #002db3;
   box-shadow: inset -25px -25px 60px #595959;
-  border-radius:0px 0px 100% 0px;
-  transition:0.3s all;
+  border-radius: 0px 0px 100% 0px;
+  transition: 0.3s all;
 }
 
-.greenAnimation , .green:active{
-  background-color:#3ede32;
- 
+.greenAnimation,
+.green:active {
+  background-color: #3ede32;
 }
 
-.redAnimation , .red:active{
-  background-color:#ff0000;
+.redAnimation,
+.red:active {
+  background-color: #ff0000;
 }
 
-.yellowAnimation , .yellow:active{
-  background-color:#ffff00;
+.yellowAnimation,
+.yellow:active {
+  background-color: #ffff00;
 }
 
-.blueAnimation , .blue:active{
-  background-color:#3e6cf5;
+.blueAnimation,
+.blue:active {
+  background-color: #3e6cf5;
+}
+
+/*End of color buttons*/
+
+/*Phone size*/
+@media screen and (max-width: 500px) {
+  .container {
+    width: 300px;
+    margin-left: -150px;
+  }
+  .color-grid {
+    width: 300px;
+    height: 300px;
+  }
+  .title {
+    font-size: 25px;
+  }
+
+  #container-controls {
+    width: 150px;
+    height: 150px;
+    left: 75px;
+    top: 75px;
+  }
+
+  .control-buttons {
+    top: 15px;
+  }
+
+  .start,
+  .strict {
+    margin: 0 10px 0 10px;
+    bottom: 2px;
+    right: 5px;
+    width: 13px;
+    height: 13px;
+  }
+
+  .strict-led {
+    bottom: 20px;
+    right: 1px;
+    width: 6px;
+    height: 6px;
+  }
+
+  .control-buttons span label {
+    right: 10px;
+    top: 12px;
+    font-size: 10px;
+  }
+
+  .counter {
+    margin-right: 10px;
+    font-size: 20px;
+    line-height: 30px;
+    width: 40px;
+    height: 30px;
+  }
+}
+
+/*On mistake blink animation for "!!" */
+.blink {
+  animation: blinker 0.5s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
 }

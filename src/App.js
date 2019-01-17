@@ -12,21 +12,71 @@ class App extends Component {
     this.colors = ["green", "red", "yellow", "blue"];
 
     this.state = {
-      gamePhase: "start",
+      gameState: "waitingClick",
+      gameMode: "normal",
       colorList: [],
-      animatedColor: ""
+      animatedColor: "",
+      colorGuessIndex: 0,
+      playerMistake: false
     };
   }
 
-  handleColorClick = color => {
-    console.log("color clicked was", color);
-
-    this.animateList();
+  handleStrictClick = () => {
+    this.state.gameMode !== "strict"
+      ? this.setState({ gameMode: "strict" })
+      : this.setState({ gameMode: "normal" });
   };
 
-  playColor = () => {
+  handleMistake = () => {
+    this.setState({ playerMistake: true, colorGuessIndex: 0 });
+    //if on strict mode reset list
+    if (this.state.gameMode === "strict") {
+      setTimeout(() => {
+        this.setState({ playerMistake: false });
+        this.handleStart();
+      }, 2000);
+    }
+    //else animate current list
+    else {
+      setTimeout(() => {
+        this.setState({ playerMistake: false });
+        this.animateList();
+      }, 2000);
+    }
+  };
+
+  handleColorClick = color => {
+    if (this.state.gameState !== "animating") {
+      this.playColorSound(color);
+      //if color guessed incorrectly
+      if (this.state.colorList[this.state.colorGuessIndex] !== color) {
+        this.handleMistake();
+      }
+      //if color guessed correctly
+      else if (this.state.colorList[this.state.colorGuessIndex] === color) {
+        //if guessed final color
+        if (this.state.colorGuessIndex + 1 === this.state.colorList.length) {
+          this.setState({ colorGuessIndex: 0 });
+          this.incrementCycle();
+          this.animateList();
+        } else {
+          this.setState({ colorGuessIndex: this.state.colorGuessIndex + 1 });
+        }
+      }
+    }
+  };
+
+  handleStart = () => {
+    //resets list, then increments and animates list
+    this.setState({ colorList: [] }, () => {
+      this.incrementCycle();
+      this.animateList();
+    });
+  };
+
+  playColorSound = color => {
     let colorPath;
-    switch (this.state.animatedColor) {
+    switch (color) {
       case "green":
         colorPath = greenAudio;
         break;
@@ -45,27 +95,36 @@ class App extends Component {
     new Audio(colorPath).play();
   };
 
-  animateList = () => {
-    //Iterates through color list, adding setTimeOut in regard to incrementing i
-    for (let i = 0; i < this.state.colorList.length; i++) {
-      setTimeout(() => {
-        this.setState({ animatedColor: this.state.colorList[i] });
-        this.playColor(this.state.animatedColor);
-      }, i * 600);
-    }
-    //sets animated color to empty after all the colors were animated
-    setTimeout(
-      () => this.setState({ animatedColor: "" }),
-      this.state.colorList.length * 600
-    );
+  animateColor = color => {
+    this.setState({ animatedColor: color });
+    setTimeout(() => {
+      this.setState({ animatedColor: "" });
+    }, 200);
   };
 
-  startGame = () => {
+  animateList = () => {
+    if (this.state.gamePhase !== "animating") {
+      this.setState({ gameState: "animating" });
+      //Iterates through color list, adding setTimeOut in regard to incrementing i
+      for (let i = 0; i < this.state.colorList.length; i++) {
+        setTimeout(() => {
+          this.animateColor(this.state.colorList[i]);
+          this.playColorSound(this.state.animatedColor);
+        }, (i + 1) * 500);
+      }
+      //sets animated color to empty after all the colors were animated
+      setTimeout(
+        () => this.setState({ gameState: "waitingClick" }),
+        (this.state.colorList.length + 1) * 500
+      );
+    }
+  };
+
+  incrementCycle = () => {
     let randColor = this.colors[Math.floor(Math.random() * 4)];
     let newList = this.state.colorList;
     newList.push(randColor);
     this.setState({ colorList: newList });
-    this.animateList();
   };
 
   render() {
@@ -76,17 +135,52 @@ class App extends Component {
       this.state.animatedColor === "yellow" ? "yellowAnimation" : "";
     let blueAnimation =
       this.state.animatedColor === "blue" ? "blueAnimation" : "";
+    let strictCss =
+      this.state.gameMode === "strict"
+        ? "strict-active strict-led"
+        : "strict-led";
+    let counter =
+      this.state.playerMistake === false ? this.state.colorList.length : "!!";
+    let counterBlink = this.state.playerMistake === true ? "blink" : "";
 
     return (
       <div className="container">
-        <div
-          onClick={() => this.handleColorClick("red")}
-          className={"color-button green " + greenAnimation}
-        />
-        <div className={"color-button red " + redAnimation} />
-        <div className={"color-button yellow " + yellowAnimation} />
-        <div className={"color-button blue " + blueAnimation} />
-        <button onClick={() => this.startGame()}>start</button>
+        <div className="color-grid">
+          <div
+            onClick={() => this.handleColorClick("green")}
+            className={"color-button green " + greenAnimation}
+          />
+          <div
+            onClick={() => this.handleColorClick("red")}
+            className={"color-button red " + redAnimation}
+          />
+          <div
+            onClick={() => this.handleColorClick("yellow")}
+            className={"color-button yellow " + yellowAnimation}
+          />
+          <div
+            onClick={() => this.handleColorClick("blue")}
+            className={"color-button blue " + blueAnimation}
+          />
+        </div>
+        <div id="container-controls">
+          <span className="title">Simon&reg;</span>
+          <div className="control-buttons">
+            <span className="button counter">
+              <span className={counterBlink}>{counter}</span>
+            </span>
+            <span onClick={() => this.handleStart()} className="start button">
+              <label>START</label>
+            </span>
+            <span
+              onClick={() => this.handleStrictClick()}
+              className="strict button"
+            >
+              <label>STRICT</label>
+              <span className={strictCss} />
+            </span>
+          </div>
+        </div>
       </div>
     );
   }
